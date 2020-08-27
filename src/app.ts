@@ -1,4 +1,3 @@
-const express = require('express')
-require('./dbs/mongoose')
-const app = express()
-module.exports = app
+import express from 'express';
+require('./db/mongoose')
+export const app = express()
