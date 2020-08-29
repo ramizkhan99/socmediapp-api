@@ -1,3 +1,3 @@
 import express from "express";
-require("./db/mongoose");
+require("./models/mongoose");
 export const app = express();
