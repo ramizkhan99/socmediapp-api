@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 import crypto, { BinaryLike } from "crypto";
 import { Binary, Timestamp, ObjectID } from "mongodb";
+import jwt from 'jsonwebtoken';
+
+const secret = "test1234" // for test add to env later
 
 var UserSchema = new mongoose.Schema(
   {
@@ -28,6 +31,12 @@ var UserSchema = new mongoose.Schema(
     active: Boolean,
     posts: [{ type: ObjectID }],
     likedPost: [{ type: ObjectID }],
+    tokens:[{
+      token:{
+        type:String,
+        required:true
+      }
+    }]
   },
   {
     timestamps: true,
@@ -49,5 +58,14 @@ UserSchema.methods.validPassword = function (password: BinaryLike) {
     .toString("hex");
   return this.hash === hash;
 };
+
+UserSchema.methods.generateAuthToken = async function(){
+  const accessToken = jwt.sign({username:this.username},secret,{expiresIn:'60m'});
+  this.tokens = this.tokens.concat({ accessToken });
+  await this.save();
+  return accessToken;
+}
+
+
 
 export default mongoose.model("User", UserSchema);
