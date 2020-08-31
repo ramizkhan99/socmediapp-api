@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 import crypto, { BinaryLike } from "crypto";
-import { Binary, Timestamp, ObjectID } from "mongodb";
+import { ObjectID } from "mongodb";
 import jwt from "jsonwebtoken";
 
 const secret = "test1234"; // for test add to env later
@@ -35,7 +35,6 @@ let UserSchema = new mongoose.Schema(
             {
                 token: {
                     type: String,
-                    
                 },
             },
         ],
@@ -47,12 +46,10 @@ let UserSchema = new mongoose.Schema(
 
 UserSchema.plugin(uniqueValidator, { message: "is already taken." });
 
-
-
 UserSchema.methods.setPassword = function (password: BinaryLike) {
     this.salt = crypto.randomBytes(16).toString("hex");
     this.hash = crypto
-        .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
+        .pbkdf2Sync(password, this.salt, 8, 128, "sha512")
         .toString("hex");
 };
 
@@ -67,8 +64,8 @@ UserSchema.methods.generateAuthToken = async function () {
     const accessToken = jwt.sign({ username: this.username }, secret, {
         expiresIn: "60m",
     });
-    
-    this.tokens = this.tokens.concat({ accessToken });
+
+    this.tokens = this.tokens.concat({ token: accessToken });
     await this.save();
     return accessToken;
 };
