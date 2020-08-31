@@ -35,7 +35,7 @@ let UserSchema = new mongoose.Schema(
             {
                 token: {
                     type: String,
-                    required: true,
+                    
                 },
             },
         ],
@@ -46,6 +46,8 @@ let UserSchema = new mongoose.Schema(
 );
 
 UserSchema.plugin(uniqueValidator, { message: "is already taken." });
+
+
 
 UserSchema.methods.setPassword = function (password: BinaryLike) {
     this.salt = crypto.randomBytes(16).toString("hex");
@@ -65,6 +67,7 @@ UserSchema.methods.generateAuthToken = async function () {
     const accessToken = jwt.sign({ username: this.username }, secret, {
         expiresIn: "60m",
     });
+    
     this.tokens = this.tokens.concat({ accessToken });
     await this.save();
     return accessToken;
