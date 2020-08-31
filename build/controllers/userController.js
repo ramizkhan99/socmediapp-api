@@ -43,33 +43,38 @@ exports.userController = void 0;
 var user_1 = __importDefault(require("../models/user"));
 exports.userController = {
     create: function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var user;
-        return __generator(this, function (_a) {
-            if (!req.body.username || !req.body.password || !req.body.email) {
-                return [2 /*return*/, res
-                        .status(400)
-                        .json({ error: "Username and password are required" })];
-            }
-            user = new user_1.default({
-                username: req.body.username,
-                email: req.body.email,
-            });
-            user.schema.methods.setPassword(req.body.password);
-            user.save();
-            res.status(201).json({ message: "User successfully created" });
-            return [2 /*return*/];
-        });
-    }); },
-    login: function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var user, verified, token;
+        var user, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!req.body.username || !req.body.password) {
+                    if (!req.body.username || !req.body.password || !req.body.email) {
                         return [2 /*return*/, res
                                 .status(400)
                                 .json({ error: "Username and password are required" })];
                     }
+                    user = new user_1.default(req.body);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, user.save()];
+                case 2:
+                    _a.sent();
+                    res.status(201).json({ message: "User successfully created" });
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_1 = _a.sent();
+                    res.status(400).json({ error: err_1.message });
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    }); },
+    login: function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+        var user, verified, token, err_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
                     return [4 /*yield*/, user_1.default.findOne({
                             username: req.body.username,
                         })];
@@ -78,7 +83,7 @@ exports.userController = {
                     if (!user) {
                         return [2 /*return*/, res.status(404).json({ error: "User not found" })];
                     }
-                    verified = user.schema.methods.validPassword(req.body.password);
+                    verified = user.validPassword(req.body.password);
                     if (!verified) {
                         return [2 /*return*/, res.status(404).json({ error: "password incorrect" })];
                     }
@@ -89,7 +94,12 @@ exports.userController = {
                         httpOnly: true,
                     });
                     res.status(200).json({ id: user._id, token: token });
-                    return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_2 = _a.sent();
+                    res.status(400).json({ error: err_2.message });
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); },

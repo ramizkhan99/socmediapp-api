@@ -1,8 +1,9 @@
-import { Schema, Types, Document, model } from "mongoose";
+import { Schema, Types, Document, model, Mongoose } from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 import crypto, { BinaryLike } from "crypto";
 import { ObjectID } from "mongodb";
 import jwt from "jsonwebtoken";
+import console from "console";
 
 const secret = "test1234"; // for test add to env later
 
@@ -65,19 +66,11 @@ interface IUserSchema extends Document {
     posts: Types.Array<Types.ObjectId>;
     likedPosts: Types.Array<Types.ObjectId>;
     tokens: Types.Array<Object>;
+    generateAuthToken(): () => string;
+    validPassword(password: string): () => boolean;
 }
 
 UserSchema.plugin(uniqueValidator, { message: "is already taken." });
-
-function hashPassword(password: BinaryLike) {
-    let salt = crypto.randomBytes(16).toString("hex");
-    return {
-        password: crypto
-            .pbkdf2Sync(password, salt, 8, 128, "sha512")
-            .toString("hex"),
-        salt,
-    };
-}
 
 UserSchema.pre<IUserSchema>("save", function (next) {
     if (this.isModified("password")) {
@@ -88,12 +81,11 @@ UserSchema.pre<IUserSchema>("save", function (next) {
     next();
 });
 
-UserSchema.methods.validPassword = function (password: BinaryLike) {
-    console.log(this);
+UserSchema.methods.validPassword = async function (password: BinaryLike) {
     const hash = crypto
-        .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
+        .pbkdf2Sync(password, this.salt, 8, 128, "sha512")
         .toString("hex");
-    return this.hash === hash;
+    return this.password === hash;
 };
 
 UserSchema.methods.generateAuthToken = async function () {
@@ -106,4 +98,15 @@ UserSchema.methods.generateAuthToken = async function () {
     return accessToken;
 };
 
-export default model("User", UserSchema);
+const User = model<IUserSchema>("User", UserSchema);
+export default User;
+
+function hashPassword(password: BinaryLike) {
+    let salt = crypto.randomBytes(16).toString("hex");
+    return {
+        password: crypto
+            .pbkdf2Sync(password, salt, 8, 128, "sha512")
+            .toString("hex"),
+        salt,
+    };
+}

@@ -39,34 +39,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = __importDefault(require("mongoose"));
+var mongoose_1 = require("mongoose");
 var mongoose_unique_validator_1 = __importDefault(require("mongoose-unique-validator"));
 var crypto_1 = __importDefault(require("crypto"));
 var mongodb_1 = require("mongodb");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var secret = "test1234"; // for test add to env later
-var UserSchema = new mongoose_1.default.Schema({
+var UserSchema = new mongoose_1.Schema({
     username: {
         type: String,
         unique: true,
-        required: [true, "can't be blank"],
+        required: true,
         match: [/^[a-zA-Z0-9]+$/, "is invalid"],
         index: true,
     },
     email: {
         type: String,
         unique: true,
-        required: [true, "can't be blank"],
+        required: true,
         match: [/\S+@\S+\.\S+/, "is invalid"],
         index: true,
     },
+    password: {
+        type: String,
+        required: true,
+    },
+    firstName: {
+        type: String,
+        required: true,
+    },
+    lastName: String,
     avatar: Buffer,
-    hash: String,
     salt: String,
-    createDate: Date,
-    lastLogin: Date,
     location: String,
-    active: Boolean,
+    active: {
+        type: Boolean,
+        default: false,
+    },
     posts: [{ type: mongodb_1.ObjectID }],
     likedPost: [{ type: mongodb_1.ObjectID }],
     tokens: [
@@ -80,13 +89,25 @@ var UserSchema = new mongoose_1.default.Schema({
     timestamps: true,
 });
 UserSchema.plugin(mongoose_unique_validator_1.default, { message: "is already taken." });
-UserSchema.methods.setPassword = function (password) {
-    this.salt = crypto_1.default.randomBytes(16).toString("hex");
-    this.hash = crypto_1.default
-        .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
-        .toString("hex");
-};
+function hashPassword(password) {
+    var salt = crypto_1.default.randomBytes(16).toString("hex");
+    return {
+        password: crypto_1.default
+            .pbkdf2Sync(password, salt, 8, 128, "sha512")
+            .toString("hex"),
+        salt: salt,
+    };
+}
+UserSchema.pre("save", function (next) {
+    if (this.isModified("password")) {
+        var hash = hashPassword(this.password);
+        this.password = hash.password;
+        this.salt = hash.salt;
+    }
+    next();
+});
 UserSchema.methods.validPassword = function (password) {
+    console.log(this);
     var hash = crypto_1.default
         .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
         .toString("hex");
@@ -110,4 +131,4 @@ UserSchema.methods.generateAuthToken = function () {
         });
     });
 };
-exports.default = mongoose_1.default.model("User", UserSchema);
+exports.default = mongoose_1.model("User", UserSchema);

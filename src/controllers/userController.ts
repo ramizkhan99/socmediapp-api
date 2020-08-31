@@ -28,11 +28,10 @@ export const userController = {
             if (!user) {
                 return res.status(404).json({ error: "User not found" });
             }
-            let verified = user.schema.methods.validPassword(req.body.password);
-            if (!verified) {
+            if (!(await user.validPassword(req.body.password))) {
                 return res.status(404).json({ error: "password incorrect" });
             }
-            const token = await user.schema.methods.generateAuthToken();
+            const token = await user.generateAuthToken();
 
             res.cookie("token", user.toObject().tokens[0].token, {
                 httpOnly: true,
@@ -41,10 +40,5 @@ export const userController = {
         } catch (err) {
             res.status(400).json({ error: err.message });
         }
-
-        // try {
-        // } catch (err) {}
-
-        //
     },
 };
