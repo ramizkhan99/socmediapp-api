@@ -11,8 +11,7 @@ jobs:
       with:
         to: ${{ secrets.chat }}
         token: ${{ secrets.token }}
-        format: markdown
         message: |
-          *Project:* socmedia-api
-          *Commit Message:* ${{ github.event.head_commit.message }}
-          *Commited by:* ${{ github.actor }}
+          Project: socmedia-api
+          Commit Message: ${{ github.event.head_commit.message }}
+          Commited by: ${{ github.actor }}
