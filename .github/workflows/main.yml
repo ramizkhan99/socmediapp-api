@@ -13,3 +13,8 @@ jobs:
         chat: ${{ secrets.chat }}
         token: ${{ secrets.token }}
         status: ${{ job.status }}
+    - name: send default message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
