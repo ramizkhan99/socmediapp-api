@@ -1,4 +1,4 @@
-name: Telegram messages
+name: Neko-chan-notify
 on: [push, pull_request, issues, issue_comment, watch]
 jobs:
   build:
