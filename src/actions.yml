@@ -1,7 +1,0 @@
-- name: Telewire
-  uses: athul/telewire@v1.1.0
-  if: always()
-      with:
-        chat: ${{ secrets.chat }}
-        token: ${{ secrets.token }}
-        status: ${{ job.status }}
