@@ -15,7 +15,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
         if (!user) {
             throw new Error();
         }
-        console.log(decoded); // for testing only delete later
+        
         res.status(200).send({
             token: token,
             user: user,
