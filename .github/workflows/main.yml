@@ -11,8 +11,11 @@ jobs:
       with:
         to: ${{ secrets.chat }}
         token: ${{ secrets.token }}
-        format: markdown
+        document: src/debug.log
+        format: html
         message: |
-          *Project:* socmedia-api
-          *Commit Message:* ${{ github.event.head_commit.message }}
-          *Commited by:* ${{ github.actor }}
+          ⚡️⚡️⚡️
+          <b>Project:</b> <a href="https://github.com/ramizkhan99/socmedia-api>socmedia-api</a>
+          <b>Commit Message:</b> ${{ github.event.head_commit.message }}
+          <b>Commited by:</b> ${{ github.actor }}
+     
