@@ -1,8 +1,8 @@
-name: Neko-chan-notify
+name: Soc-media api
 on: [push, pull_request, issues, issue_comment, watch]
 jobs:
   build:
-    name: Telegram-Notify
+    name: Build
     runs-on: ubuntu_latest
     steps:
     - uses: actions/checkout@master
@@ -11,7 +11,7 @@ jobs:
       with:
         to: ${{ secrets.chat }}
         token: ${{ secrets.token }}
-        message: |
+        args: |
           Project: socmedia-api
           Commit Message: ${{ github.event.head_commit.message }}
           Commited by: ${{ github.actor }}
