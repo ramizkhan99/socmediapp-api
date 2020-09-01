@@ -1,11 +1,6 @@
 import { Schema, Types, Document, model, Mongoose } from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 import crypto, { BinaryLike } from "crypto";
-<<<<<<< HEAD
-import { Binary, Timestamp, ObjectID } from "mongodb";
-
-var UserSchema = new mongoose.Schema(
-=======
 import { ObjectID } from "mongodb";
 import jwt from "jsonwebtoken";
 import console from "console";
@@ -13,37 +8,17 @@ import console from "console";
 const secret = "test1234"; // for test add to env later
 
 let UserSchema = new Schema(
->>>>>>> 4e37622af3e8788c3d5e1b3dee6567a68b69ce00
     {
         username: {
             type: String,
             unique: true,
-<<<<<<< HEAD
-            required: [true, "can't be blank"],
-=======
             required: true,
->>>>>>> 4e37622af3e8788c3d5e1b3dee6567a68b69ce00
             match: [/^[a-zA-Z0-9]+$/, "is invalid"],
             index: true,
         },
         email: {
             type: String,
             unique: true,
-<<<<<<< HEAD
-            required: [true, "can't be blank"],
-            match: [/\S+@\S+\.\S+/, "is invalid"],
-            index: true,
-        },
-        avatar: Binary,
-        hash: String,
-        salt: String,
-        createDate: Timestamp,
-        lastLogin: Timestamp,
-        location: String,
-        active: Boolean,
-        posts: [{ type: ObjectID }],
-        likedPost: [{ type: ObjectID }],
-=======
             required: true,
             match: [/\S+@\S+\.\S+/, "is invalid"],
             index: true,
@@ -73,7 +48,6 @@ let UserSchema = new Schema(
                 },
             },
         ],
->>>>>>> 4e37622af3e8788c3d5e1b3dee6567a68b69ce00
     },
     {
         timestamps: true,
@@ -98,20 +72,6 @@ interface IUserSchema extends Document {
 
 UserSchema.plugin(uniqueValidator, { message: "is already taken." });
 
-<<<<<<< HEAD
-UserSchema.methods.setPassword = function (password: BinaryLike) {
-    this.salt = crypto.randomBytes(16).toString("hex");
-    this.hash = crypto
-        .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
-        .toString("hex");
-};
-
-UserSchema.methods.validPassword = function (password: BinaryLike) {
-    var hash = crypto
-        .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
-        .toString("hex");
-    return this.hash === hash;
-=======
 UserSchema.pre<IUserSchema>("save", function (next) {
     if (this.isModified("password")) {
         const hash = hashPassword(this.password);
@@ -136,7 +96,6 @@ UserSchema.methods.generateAuthToken = async function () {
     this.tokens = this.tokens.concat({ token: accessToken });
     await this.save();
     return accessToken;
->>>>>>> 4e37622af3e8788c3d5e1b3dee6567a68b69ce00
 };
 
 const User = model<IUserSchema>("User", UserSchema);
