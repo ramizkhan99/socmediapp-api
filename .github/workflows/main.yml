@@ -14,7 +14,7 @@ jobs:
         format: html
         message: |
           ⚡️⚡️⚡️
-          <b>Project:</b> <a href="https://github.com/ramizkhan99/socmedia-api>socmedia-api</a>
+          <b>Project:</b> <a href="https://github.com/ramizkhan99/socmedia-api">socmedia-api</a>
           <b>Commit Message:</b> ${{ github.event.head_commit.message }}
           <b>Commited by:</b> ${{ github.actor }}
      
