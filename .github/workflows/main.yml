@@ -1,20 +1,18 @@
-name: Neko-chan-notify
+name: Telegram messages
 on: [push, pull_request, issues, issue_comment, watch]
 jobs:
   build:
     name: Telegram-Notify
-    runs-on: ubuntu-latest
+    runs-on: ubuntu_latest
     steps:
     - uses: actions/checkout@master
     - name: Neko-chan-notify
-      uses: athul/telewire@master
-      if: always()
-      with:
-        chat: ${{ secrets.chat }}
-        token: ${{ secrets.token }}
-        status: ${{ job.status }}
-    - name: send default message
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.chat }}
         token: ${{ secrets.token }}
+        format: markdown
+        message: |
+          *Project:* socmedia-api
+          *Commit Message:* ${{ github.event.head_commit.message }}
+          *Commited by:* ${{ github.actor }}
