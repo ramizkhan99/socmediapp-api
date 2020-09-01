@@ -1,15 +1,15 @@
 name: Neko-chan-notify
-on: [push]
+on: [push, pull_request, issues, issue_comment, watch]
 jobs:
-
   build:
-    name: Build
+    name: Telegram-Notify
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: send custom message with args
-      uses: appleboy/telegram-action@master
+    - name: Neko-chan-notify
+      uses: athul/telewire@master
+      if: always()
       with:
-        to: ${{ secrets.CHAT }}
-        token: ${{ secrets.TOKEN }}
-        args: The ${{ github.event_name }} event triggered first step.
+        chat: ${{ secrets.chat }}
+        token: ${{ secrets.token }}
+        status: ${{ job.status }}
