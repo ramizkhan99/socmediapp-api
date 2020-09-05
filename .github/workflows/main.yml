@@ -1,0 +1,25 @@
+name: Soc-media api
+on: [push, pull_request, issues, issue_comment, watch]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+    - name: Neko-chan-notify
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.chat }}
+        token: ${{ secrets.token }}
+        format: html
+        message: |
+          ⚡️⚡️⚡️
+          <b>Project:</b> <a href="https://github.com/ramizkhan99/socmedia-api">socmedia-api</a>
+          <b>Commit Message:</b> ${{ github.event.head_commit.message }}
+          <b>Commited by:</b> ${{ github.actor }}
+          <b>On Branch:</b> ${{ steps.extract_branch.outputs.branch }}
+     
