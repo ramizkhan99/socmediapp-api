@@ -11,6 +11,7 @@ export const userController = {
         }
 
         let user = new User(req.body);
+        console.log(user);
 
         try {
             await user.save();
@@ -23,8 +24,9 @@ export const userController = {
     login: async (req: Request, res: Response) => {
         try {
             let user = await User.findOne({
-                username: req.body.username,
+                username: req.body.username
             });
+
             if (!user) {
                 return res.status(404).json({ error: "User not found" });
             }
@@ -34,11 +36,12 @@ export const userController = {
             const token = await user.generateAuthToken();
 
             res.cookie("token", user.toObject().tokens[0].token, {
-                httpOnly: true,
+                httpOnly: true
             });
             res.status(200).json({ id: user._id, token: token });
         } catch (err) {
+            console.log(err.message);
             res.status(400).json({ error: err.message });
         }
-    },
+    }
 };
