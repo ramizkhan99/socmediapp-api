@@ -5,9 +5,12 @@ import config from "../config/config";
 
 const secret = config.JWT_SECRET; // for test add to env later
 
+
 const auth = async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.headers.authorization)
     try {
         const token: any = req.headers.authorization?.split(" ")[1];
+        console.log(token);
         const decoded = jwt.verify(token, secret);
         const user = await User.findOne({
             username: (decoded as any).username,

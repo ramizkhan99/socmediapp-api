@@ -3,8 +3,11 @@ import uniqueValidator from "mongoose-unique-validator";
 import crypto, { BinaryLike } from "crypto";
 import { ObjectID } from "mongodb";
 import jwt from "jsonwebtoken";
+import config from "../config/config";
 
-const secret = "test1234"; // for test add to env later
+const secret = config.JWT_SECRET;
+
+
 
 let UserSchema = new Schema(
     {
