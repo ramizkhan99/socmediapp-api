@@ -13,7 +13,7 @@ interface IUserRequest extends Request {
 // User routes
 router.post("/users", userController.create);
 router.post("/login", userController.login);
-router.get("/test", [auth], (req: IUserRequest, res: Response) => {console.log(req.user);res.send(req)});
-router.post("/signout",[auth],(req: IUserRequest, res: Response) => {console.log(req.user);res.send(req.user)})
+router.get("/test", [auth], (req: IUserRequest, res: Response) => {res.status(200).send("okay")});
+router.post("/signout",[auth],userController.signout)
 
 export default router;
