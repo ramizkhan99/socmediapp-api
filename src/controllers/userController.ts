@@ -1,6 +1,12 @@
 import User from "../models/user";
+import IUserSchema from "../models/user"
 import { Request, Response } from "express";
 import console from "console";
+
+interface IUserRequest extends Request {
+    user: any ;
+    token:string;
+    }
 
 export const userController = {
     create: async (req: Request, res: Response) => {
@@ -43,5 +49,17 @@ export const userController = {
             console.log(err.message);
             res.status(400).json({ error: err.message });
         }
-    }
+    },
+    signout: async(req: IUserRequest, res: Response)=>{
+        console.log(req.user)
+        try{
+            await req.user.deleteToken(req.token)
+            res.status(200).send("logged out")
+            
+        }
+        catch(err){
+            console.log(err)
+        }
+
+    },
 };

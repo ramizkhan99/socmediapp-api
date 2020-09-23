@@ -56,7 +56,7 @@ let UserSchema = new Schema(
     }
 );
 
-interface IUserSchema extends Document {
+export interface IUserSchema extends Document {
     firstName: string;
     lastName?: string;
     username: string;
@@ -70,6 +70,8 @@ interface IUserSchema extends Document {
     tokens: Types.Array<Object>;
     generateAuthToken(): () => string;
     validPassword(password: string): () => boolean;
+    deleteToken(deltoken:string):()=>null;
+
 }
 
 UserSchema.plugin(uniqueValidator, { message: "is already taken." });
@@ -99,6 +101,14 @@ UserSchema.methods.generateAuthToken = async function () {
     await this.save();
     return accessToken;
 };
+UserSchema.methods.deleteToken = async function(deltoken:string){
+    
+    this.tokens = this.tokens.filter((tokens:any)=>{
+        return tokens.token !== deltoken 
+
+    });
+    await this.save();
+}
 
 const User = model<IUserSchema>("User", UserSchema);
 export default User;
