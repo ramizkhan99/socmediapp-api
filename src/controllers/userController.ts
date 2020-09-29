@@ -1,5 +1,7 @@
 import User, { IUserSchema } from "../models/user";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import HttpError from "../errors/HttpError";
+import NotFoundError from "../errors/NotFound";
 
 interface IUserRequest extends Request {
     user: IUserSchema;
@@ -8,34 +10,29 @@ interface IUserRequest extends Request {
 }
 
 export const userController = {
-    create: async (req: Request, res: Response) => {
-        if (!req.body.username || !req.body.password || !req.body.email) {
-            return res
-                .status(400)
-                .json({ error: "Username and password are required" });
-        }
-
-        let user = new User(req.body);
-
+    create: async (req: Request, res: Response, next: NextFunction) => {
         try {
+            if (!req.body.username || !req.body.password || !req.body.email) {
+                throw new HttpError(400, "Invalid data");
+            }
+
+            let user = new User(req.body);
+
             await user.save();
             res.status(201).json({ message: "User successfully created" });
-        } catch (err) {
-            res.status(400).json({ error: err.message });
+        } catch (e) {
+            next(e);
         }
     },
 
-    login: async (req: Request, res: Response) => {
+    login: async (req: Request, res: Response, next: NextFunction) => {
         try {
             let user = await User.findOne({
                 username: req.body.username
             });
 
             if (!(user || user.validPassword(req.body.password))) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Invalid username or password"
-                });
+                throw new NotFoundError("User");
             }
             const token = await user.generateAuthToken();
             res.cookie("token", token, {
@@ -46,19 +43,19 @@ export const userController = {
                 token: token,
                 username: user.username
             });
-        } catch (err) {
-            res.status(400).json({ success: false, error: err.message });
+        } catch (e) {
+            next(e);
         }
     },
-    signout: async (req: IUserRequest, res: Response) => {
+    signout: async (req: IUserRequest, res: Response, next: NextFunction) => {
         try {
             req.user.deleteToken(req.token);
             res.status(200).send({
                 success: true,
                 message: "Logged out successfully"
             });
-        } catch (err) {
-            res.status(400).json({ success: false, message: err.message });
+        } catch (e) {
+            next(e);
         }
     }
 };

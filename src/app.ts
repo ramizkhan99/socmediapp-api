@@ -7,17 +7,21 @@ import cors from "cors";
 require("./models/mongoose");
 
 import router from "./routes";
+import errorHandler from "./middlewares/errorHandler";
 
-export const app = express();
+export const app: express.Application = express();
 
-const logStream = fs.createWriteStream(path.join(__dirname, "debug.log"), {
-    flags: "a"
-});
+const logStream: fs.WriteStream = fs.createWriteStream(
+    path.join(__dirname, "debug.log"),
+    { flags: "a" }
+);
 
 app.use(morgan("combined", { stream: logStream }));
+app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 app.use(router);
 app.use(cookieParser());
+app.use(errorHandler);
 
 // For commit to test neko-chan telewire test 1

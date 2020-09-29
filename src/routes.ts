@@ -11,6 +11,6 @@ router.post("/login", userController.login);
 router.get("/test", [auth], (req: Request, res: Response) => {
     res.status(200).send("okay");
 });
-router.post("/signout", [auth], userController.signout);
+router.get("/signout", [auth], userController.signout);
 
 export default router;
