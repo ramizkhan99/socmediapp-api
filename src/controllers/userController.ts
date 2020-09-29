@@ -6,6 +6,7 @@ import console from "console";
 interface IUserRequest extends Request {
     user: any ;
     token:string;
+    username:string;
     }
 
 export const userController = {
@@ -43,7 +44,7 @@ export const userController = {
             res.cookie("token", token, {
                 httpOnly: true
             });
-            res.status(200).json({ id: user._id, token: token });
+            res.status(200).json({ id: user._id, token: token,username:user.username });
         } catch (err) {
             console.log(err.message);
             res.status(400).json({ error: err.message });
