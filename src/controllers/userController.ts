@@ -1,13 +1,11 @@
-import User from "../models/user";
-import IUserSchema from "../models/user"
+import User, { IUserSchema } from "../models/user";
 import { Request, Response } from "express";
-import console from "console";
 
 interface IUserRequest extends Request {
-    user: any ;
-    token:string;
-    username:string;
-    }
+    user: IUserSchema;
+    token: string;
+    username: string;
+}
 
 export const userController = {
     create: async (req: Request, res: Response) => {
@@ -18,7 +16,6 @@ export const userController = {
         }
 
         let user = new User(req.body);
-        
 
         try {
             await user.save();
@@ -34,32 +31,34 @@ export const userController = {
                 username: req.body.username
             });
 
-            if (!user) {
-                return res.status(404).json({ error: "User not found" });
-            }
-            if (!(await user.validPassword(req.body.password))) {
-                return res.status(404).json({ error: "password incorrect" });
+            if (!(user || user.validPassword(req.body.password))) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Invalid username or password"
+                });
             }
             const token = await user.generateAuthToken();
             res.cookie("token", token, {
                 httpOnly: true
             });
-            res.status(200).json({ id: user._id, token: token,username:user.username });
+            res.status(200).json({
+                id: user._id,
+                token: token,
+                username: user.username
+            });
         } catch (err) {
-            console.log(err.message);
-            res.status(400).json({ error: err.message });
+            res.status(400).json({ success: false, error: err.message });
         }
     },
-    signout: async(req: IUserRequest, res: Response)=>{
-        
-        try{
-            await req.user.deleteToken(req.token)
-            res.status(200).send("logged out")
-            
+    signout: async (req: IUserRequest, res: Response) => {
+        try {
+            req.user.deleteToken(req.token);
+            res.status(200).send({
+                success: true,
+                message: "Logged out successfully"
+            });
+        } catch (err) {
+            res.status(400).json({ success: false, message: err.message });
         }
-        catch(err){
-            console.log(err)
-        }
-
-    },
+    }
 };

@@ -7,8 +7,6 @@ import config from "../config/config";
 
 const secret = config.JWT_SECRET;
 
-
-
 let UserSchema = new Schema(
     {
         username: {
@@ -70,8 +68,7 @@ export interface IUserSchema extends Document {
     tokens: Types.Array<Object>;
     generateAuthToken(): () => string;
     validPassword(password: string): () => boolean;
-    deleteToken(deltoken:string):()=>null;
-
+    deleteToken(deltoken: string): () => null;
 }
 
 UserSchema.plugin(uniqueValidator, { message: "is already taken." });
@@ -101,17 +98,14 @@ UserSchema.methods.generateAuthToken = async function () {
     await this.save();
     return accessToken;
 };
-UserSchema.methods.deleteToken = async function(deltoken:string){
-    
-    this.tokens = this.tokens.filter((tokens:any)=>{
-        return tokens.token !== deltoken 
-
+UserSchema.methods.deleteToken = async function (deltoken: string) {
+    this.tokens = this.tokens.filter((tokens: any) => {
+        return tokens.token !== deltoken;
     });
     await this.save();
-}
+};
 
 const User = model<IUserSchema>("User", UserSchema);
-export default User;
 
 function hashPassword(password: BinaryLike) {
     let salt = crypto.randomBytes(16).toString("hex");
@@ -122,3 +116,5 @@ function hashPassword(password: BinaryLike) {
         salt
     };
 }
+
+export default User;
