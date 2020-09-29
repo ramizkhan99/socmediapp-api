@@ -1,4 +1,4 @@
-import { Schema, Types, Document, model } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 import { Int32 } from "mongodb";
 import Comment, { ICommentSchema } from "./comment";
 
