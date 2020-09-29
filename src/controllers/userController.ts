@@ -40,8 +40,7 @@ export const userController = {
                 return res.status(404).json({ error: "password incorrect" });
             }
             const token = await user.generateAuthToken();
-
-            res.cookie("token", user.toObject().tokens[0].token, {
+            res.cookie("token", token, {
                 httpOnly: true
             });
             res.status(200).json({ id: user._id, token: token });
@@ -51,7 +50,7 @@ export const userController = {
         }
     },
     signout: async(req: IUserRequest, res: Response)=>{
-        console.log(req.user)
+        
         try{
             await req.user.deleteToken(req.token)
             res.status(200).send("logged out")
