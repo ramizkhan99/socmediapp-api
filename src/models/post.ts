@@ -1,5 +1,8 @@
 import { Schema, Types, Document, model } from "mongoose";
 import { Int32 } from "mongodb";
+import Comment, { ICommentSchema } from "./comment";
+
+// TODO: Make Schema for comments instead of using in object
 let PostSchema = new Schema(
     {
         authorId: {
@@ -23,22 +26,7 @@ let PostSchema = new Schema(
             required: false,
             default: "General"
         },
-        comments: [
-            {
-                author: {
-                    type: String,
-                    required: true
-                },
-                authorId: {
-                    type: String,
-                    required: true
-                },
-                content: {
-                    type: String,
-                    required: true
-                }
-            }
-        ],
+        comments: [Comment],
         likes: {
             type: Int32
         }
@@ -54,7 +42,7 @@ export interface IPostSchema extends Document {
     title: String;
     content: String;
     genre: String;
-    comments: Types.Array<Object>;
+    comments: ICommentSchema[];
     likes: Int32;
 }
 
