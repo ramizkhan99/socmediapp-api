@@ -10,12 +10,14 @@ import router from "./routes";
 
 export const app = express();
 
-const logStream = fs.createWriteStream(path.join(__dirname, "debug.log"));
+const logStream = fs.createWriteStream(path.join(__dirname, "debug.log"), {
+    flags: "a"
+});
 
+app.use(morgan("combined", { stream: logStream }));
 app.use(cors());
 app.use(express.json());
 app.use(router);
 app.use(cookieParser());
-app.use(morgan("dev", { stream: logStream }));
 
 // For commit to test neko-chan telewire test 1
