@@ -19,9 +19,9 @@ const logStream: fs.WriteStream = fs.createWriteStream(
 app.use(morgan("combined", { stream: logStream }));
 app.use(morgan("dev"));
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(router);
-app.use(cookieParser());
 app.use(errorHandler);
 
 // For commit to test neko-chan telewire test 1

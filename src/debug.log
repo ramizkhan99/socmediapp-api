@@ -17,3 +17,6 @@
 ::1 - - [29/Sep/2020:14:40:52 +0000] "GET /test HTTP/1.1" 401 60 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36 Edg/85.0.564.63"
 ::1 - - [29/Sep/2020:14:40:52 +0000] "GET /test HTTP/1.1" 401 60 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36 Edg/85.0.564.63"
 ::1 - - [29/Sep/2020:14:40:52 +0000] "GET /test HTTP/1.1" 401 60 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36 Edg/85.0.564.63"
+::1 - - [30/Sep/2020:06:11:38 +0000] "POST /login HTTP/1.1" 200 223 "-" "PostmanRuntime/7.26.5"
+::1 - - [30/Sep/2020:06:12:31 +0000] "GET /signout HTTP/1.1" 401 60 "-" "PostmanRuntime/7.26.5"
+::1 - - [30/Sep/2020:06:13:37 +0000] "GET /signout HTTP/1.1" 200 52 "-" "PostmanRuntime/7.26.5"
