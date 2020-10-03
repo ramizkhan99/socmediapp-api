@@ -21,7 +21,7 @@ const auth = async (req: IUserRequest, res: Response, next: NextFunction) => {
         const decoded = jwt.verify(token, secret);
         const user = await User.findOne({
             username: (decoded as any).username,
-            "tokens.token": token
+            "tokens.token": token,
         });
         if (!user) {
             throw new NotFoundError("User");
@@ -30,6 +30,7 @@ const auth = async (req: IUserRequest, res: Response, next: NextFunction) => {
         req.token = token;
         next();
     } catch (e) {
+        console.log({ error: e });
         next(e);
     }
 };

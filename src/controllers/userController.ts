@@ -28,20 +28,18 @@ export const userController = {
     login: async (req: Request, res: Response, next: NextFunction) => {
         try {
             let user = await User.findOne({
-                username: req.body.username
+                username: req.body.username,
             });
 
             if (!(user || user.validPassword(req.body.password))) {
                 throw new NotFoundError("User");
             }
             const token = await user.generateAuthToken();
-            res.cookie("token", token, {
-                httpOnly: true
-            });
+            res.cookie("token", token, { httpOnly: true });
             res.status(200).json({
                 id: user._id,
                 token: token,
-                username: user.username
+                username: user.username,
             });
         } catch (e) {
             next(e);
@@ -52,10 +50,10 @@ export const userController = {
             req.user.deleteToken(req.token);
             res.status(200).send({
                 success: true,
-                message: "Logged out successfully"
+                message: "Logged out successfully",
             });
         } catch (e) {
             next(e);
         }
-    }
+    },
 };
