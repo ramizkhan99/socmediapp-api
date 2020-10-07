@@ -1,18 +1,18 @@
 import { Document, model, Schema } from "mongoose";
 
-let CommentSchema = new Schema({
+export let CommentSchema = new Schema({
     userId: {
         type: String,
-        required: true
+        required: true,
     },
     username: {
         type: String,
-        required: true
+        required: true,
     },
     content: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 });
 
 export interface ICommentSchema extends Document {
