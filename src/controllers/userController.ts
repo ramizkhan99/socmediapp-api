@@ -37,8 +37,6 @@ export const userController = {
             const token = await user.generateAuthToken();
             res.cookie("token", token, { httpOnly: true });
             res.status(200).json({
-                id: user._id,
-                token: token,
                 username: user.username,
             });
         } catch (e) {
