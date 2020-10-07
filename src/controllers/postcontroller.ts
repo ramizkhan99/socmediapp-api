@@ -47,7 +47,7 @@ export const postController = {
             }).lean();
             if (!post) throw new NotFoundError("Post not found");
             delete post._id;
-            delete post.authorName;
+            delete post.authorId;
             res.status(200).json({ success: true, post: post });
         } catch (err) {
             next(err);
