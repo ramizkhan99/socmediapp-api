@@ -13,9 +13,10 @@ export const postController = {
     create: async (req: IPostRequest, res: Response, next: NextFunction) => {
         try {
             let post = new Post(req.body);
+            let url = "@"+req.user.username+"/"+kebabCase(req.body.title)
             post.authorId = req.user._id;
             post.authorName = req.user.username;
-            post.lodash = kebabCase(req.body.title);
+            post.lodash = url
             await post.save();
             res.status(201).json({
                 success: true,
