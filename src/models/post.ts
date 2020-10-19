@@ -1,50 +1,67 @@
 import { Schema, Document, model } from "mongoose";
 import { Int32 } from "mongodb";
-import Comment, { ICommentSchema } from "./comment";
+import Comment, { ICommentSchema, CommentSchema } from "./comment";
 
-// TODO: Make Schema for comments instead of using in object
 let PostSchema = new Schema(
     {
         authorId: {
             type: String,
-            required: true
+            required: true,
         },
+        lodash: String,
         authorName: {
             type: String,
-            required: true
+            required: true,
         },
         title: {
             type: String,
-            required: true
+            required: true,
         },
         content: {
             type: String,
-            required: true
+            required: true,
         },
         genre: {
             type: String,
             required: false,
-            default: "General"
+            default: "General",
         },
-        comments: [Comment],
+        comments: {
+            type: CommentSchema,
+        },
         likes: {
-            type: Int32
-        }
+            type: Number,
+        },
     },
     {
-        timestamps: true
+        timestamps: true,
     }
 );
 
 export interface IPostSchema extends Document {
-    authorId: String;
-    authorName: String;
-    title: String;
-    content: String;
-    genre: String;
+    authorId: string;
+    authorName: string;
+    title: string;
+    content: string;
+    genre: string;
     comments: ICommentSchema[];
     likes: Int32;
+    lodash: string;
 }
+
+PostSchema.methods.toJSON = function () {
+    const post = this;
+    const postObject = post.toObject();
+
+    delete postObject.comments;
+    delete postObject.content;
+    delete postObject.authorId;
+    delete postObject._id;
+    delete postObject.createdAt;
+    delete postObject.updatedAt;
+
+    return postObject;
+};
 
 const Post = model<IPostSchema>("Post", PostSchema);
 
