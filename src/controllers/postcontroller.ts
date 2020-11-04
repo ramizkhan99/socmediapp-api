@@ -28,11 +28,23 @@ export const postController = {
     },
     getAllBlogs: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const posts = await Post.find().sort([["createdAt", -1]]);
-            if (!posts) throw new NotFoundError("No posts found");
-            let postObjects: Object[] = [];
-            posts.map((post) => postObjects.push(post.toJSON()));
-            res.status(200).json({ success: true, posts: postObjects });
+            if(req.query){
+                const posts = await Post.find(req.query).sort([["createdAt", -1]]);
+                if (!posts) throw new NotFoundError("No posts found");
+                let postObjects: Object[] = [];
+                posts.map((post) => postObjects.push(post.toJSON()));
+                res.status(200).json({ success: true, posts: postObjects });
+
+            }
+            else{
+                const posts = await Post.find().sort([["createdAt", -1]]);
+                if (!posts) throw new NotFoundError("No posts found");
+                let postObjects: Object[] = [];
+                posts.map((post) => postObjects.push(post.toJSON()));
+                res.status(200).json({ success: true, posts: postObjects });
+
+            }
+
         } catch (err) {
             next(err);
         }
@@ -54,20 +66,6 @@ export const postController = {
             next(err);
         }
     },
-    getBlogByQuery: async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => {
-        try {
-            const posts = await Post.find(req.query).sort([["createdAt", -1]]);
-            if (!posts) throw new NotFoundError("No posts found");
-            let postObjects: Object[] = [];
-            posts.map((post) => postObjects.push(post.toJSON()));
-            res.status(200).json({ success: true, posts: postObjects });
-        } catch (err) {
-            next(err);
-        }
-    },
+    
     
 };

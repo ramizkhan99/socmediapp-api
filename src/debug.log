@@ -276,3 +276,6 @@
 ::1 - - [04/Nov/2020:05:59:20 +0000] "GET /blogsbyauthor/?authorName=post1234 HTTP/1.1" 200 587 "-" "PostmanRuntime/7.26.5"
 ::1 - - [04/Nov/2020:05:59:37 +0000] "GET /blogsbyauthor/?genre=business HTTP/1.1" 200 119 "-" "PostmanRuntime/7.26.5"
 ::1 - - [04/Nov/2020:05:59:45 +0000] "GET /blogsbyauthor/?genre=tech HTTP/1.1" 200 247 "-" "PostmanRuntime/7.26.5"
+::1 - - [04/Nov/2020:06:10:26 +0000] "GET /blogs HTTP/1.1" 200 769 "-" "PostmanRuntime/7.26.5"
+::1 - - [04/Nov/2020:06:10:42 +0000] "GET /blogs?authorName=post1234 HTTP/1.1" 200 587 "-" "PostmanRuntime/7.26.5"
+::1 - - [04/Nov/2020:06:10:56 +0000] "GET /blogs?genre=tech HTTP/1.1" 200 247 "-" "PostmanRuntime/7.26.5"
