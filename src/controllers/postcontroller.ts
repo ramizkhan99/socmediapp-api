@@ -66,6 +66,31 @@ export const postController = {
             next(err);
         }
     },
-    
+    modifyBlog: async (
+        req: IPostRequest,
+        res: Response,
+        next: NextFunction
+
+    ) =>{
+        try {
+            
+            const filter = {
+                lodash: req.params.lodash,
+                authorId:req.user._id
+                }
+            const result = await Post.updateOne(filter,req.body)
+            if(result.n===0)    throw new NotFoundError("Post cannot be modified");
+            console.log(result)
+            res.status(200).json({
+                success: true,
+                message: "Post Modified Successfully",
+            });
+
+            
+        } catch (err) {
+            next(err);
+        }
+
+    }
     
 };

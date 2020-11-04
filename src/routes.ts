@@ -18,9 +18,10 @@ router.get("/signout", [auth], userController.signout);
 router
     .route("/blogs")
     .post([auth], postController.create)
-    .get(postController.getAllBlogs);
+    .get([auth],postController.getAllBlogs);
 
 router.get("/blogsbylodash/:lodash", postController.getBlogByLodash);
+router.patch("/blogsbylodash/:lodash",[auth],postController.modifyBlog);
 
 
 export default router;
