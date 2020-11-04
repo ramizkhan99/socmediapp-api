@@ -21,6 +21,7 @@ router
     .get(postController.getAllBlogs);
 
 router.get("/blogsbylodash/:lodash", postController.getBlogByLodash);
-router.get("/blogsbygenre/:genre",postController.getBlogByGenre)
+router.get("/blogsbygenre/:genre",[auth],postController.getBlogByGenre);
+router.get("/blogsbyauthor/:authorName",[auth],postController.getBlogByUser)
 
 export default router;
