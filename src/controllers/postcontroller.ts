@@ -16,7 +16,7 @@ export const postController = {
             let url = "@"+req.user.username+"/"+kebabCase(req.body.title)
             post.authorId = req.user._id;
             post.authorName = req.user.username;
-            post.lodash = url
+            post.lodash = kebabCase(req.body.title)
             await post.save();
             res.status(201).json({
                 success: true,
