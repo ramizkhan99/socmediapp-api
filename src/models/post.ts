@@ -21,6 +21,10 @@ let PostSchema = new Schema(
             type: String,
             required: true,
         },
+        summary:{
+            type: String,
+            required: false,
+        },
         genre: {
             type: String,
             required: false,
@@ -43,6 +47,7 @@ export interface IPostSchema extends Document {
     authorName: string;
     title: string;
     content: string;
+    summary:string;
     genre: string;
     comments: ICommentSchema[];
     likes: Int32;

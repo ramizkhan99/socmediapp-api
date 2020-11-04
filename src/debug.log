@@ -307,3 +307,6 @@
 ::1 - - [04/Nov/2020:07:14:57 +0000] "POST /login HTTP/1.1" 200 23 "-" "PostmanRuntime/7.26.5"
 ::1 - - [04/Nov/2020:07:15:05 +0000] "PATCH /blogsbylodash/last-test HTTP/1.1" 200 55 "-" "PostmanRuntime/7.26.5"
 ::1 - - [04/Nov/2020:07:15:44 +0000] "PATCH /blogsbylodash/last-test HTTP/1.1" 200 55 "-" "PostmanRuntime/7.26.5"
+::1 - - [04/Nov/2020:07:17:13 +0000] "PATCH /blogsbylodash/last-test HTTP/1.1" 404 76 "-" "PostmanRuntime/7.26.5"
+::1 - - [04/Nov/2020:07:17:31 +0000] "POST /login HTTP/1.1" 200 22 "-" "PostmanRuntime/7.26.5"
+::1 - - [04/Nov/2020:07:17:36 +0000] "PATCH /blogsbylodash/last-test HTTP/1.1" 200 55 "-" "PostmanRuntime/7.26.5"
