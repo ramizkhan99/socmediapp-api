@@ -20,6 +20,7 @@ router
     .post([auth], postController.create)
     .get(postController.getAllBlogs);
 
-router.get("/blogs/:lodash", postController.getBlogByLodash);
+router.get("/blogsbylodash/:lodash", postController.getBlogByLodash);
+router.get("/blogsbygenre/:genre",postController.getBlogByGenre)
 
 export default router;

@@ -54,4 +54,21 @@ export const postController = {
             next(err);
         }
     },
+    getBlogByGenre: async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            
+            const posts = await Post.find({genre:req.params.genre}).sort([["createdAt", -1]]);
+            if (!posts) throw new NotFoundError("No posts found");
+            let postObjects: Object[] = [];
+            posts.map((post) => postObjects.push(post.toJSON()));
+            res.status(200).json({ success: true, posts: postObjects });
+        } catch (err) {
+            next(err);
+        }
+    },
+    
 };
