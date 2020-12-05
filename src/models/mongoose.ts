@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const url = "mongodb://127.0.0.1:27017/socmed-users";
+const url = "mongodb+srv://test:test@cluster0.1n41s.mongodb.net/socmed-users?retryWrites=true&w=majority";
 
 mongoose
     .connect(url, {
