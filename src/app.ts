@@ -5,11 +5,17 @@ import fs from "fs";
 import path from "path";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import redis from "redis";
+let RedisStore = require("connect-redis")(session);
 require("./models/mongoose");
 
 import router from "./routes";
 import errorHandler from "./middlewares/errorHandler";
 
+let redisClient = redis.createClient();
+redisClient.auth(
+    "sWR6TzReNOcotVEDA2YYLnmrT51jcgl5nxtcfii+PxAHjAC+iN7YicrLlcaygmxNPKh2G9UitkugEYsP"
+);
 export const app: express.Application = express();
 
 const logStream: fs.WriteStream = fs.createWriteStream(
@@ -17,13 +23,32 @@ const logStream: fs.WriteStream = fs.createWriteStream(
     { flags: "a" }
 );
 
-app.use(session({ secret: "commconn-scecret" }));
 app.use(morgan("combined", { stream: logStream }));
 app.use(morgan("dev"));
 app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
 app.use(cookieParser());
+app.use(
+    session({
+        secret: "commconn-secret",
+        name: "commconn",
+        cookie: {
+            httpOnly: true,
+            secure: true,
+            maxAge: 600000,
+            sameSite: false,
+        },
+        store: new RedisStore({ client: redisClient, ttl: 86400 }),
+        saveUninitialized: false,
+        resave: false,
+    })
+);
 app.use(express.json());
 app.use(router);
 app.use(errorHandler);
 
 // For commit to test neko-chan telewire test 1
+const sessionid = () => {
+    return "thisisit";
+};
+
+// sWR6TzReNOcotVEDA2YYLnmrT51jcgl5nxtcfii+PxAHjAC+iN7YicrLlcaygmxNPKh2G9UitkugEYsP

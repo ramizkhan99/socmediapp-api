@@ -6,8 +6,22 @@ import auth from "./middlewares/auth";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-    res.send("This is up");
+declare module "express-session" {
+    interface SessionData {
+        value: number;
+    }
+}
+
+router.get("/", (req: Request, res: Response) => {
+    let sess = req.session;
+    console.log(!!sess.value);
+    if (!!sess.value) {
+        sess.value++;
+        res.send("You were here " + sess.value + " times");
+    } else {
+        sess.value = 1;
+        res.send("You are here for the first time");
+    }
 });
 
 // User routes
