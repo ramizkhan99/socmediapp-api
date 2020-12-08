@@ -30,9 +30,14 @@ let PostSchema = new Schema(
             required: false,
             default: "General",
         },
-        comments: {
-            type: CommentSchema,
-        },
+        comments: [{
+            comment:{
+                userid:String,
+                firstName:String,
+                content:String
+            },
+        }
+        ],
         likes: {
             type: Number,
             default: 0,
@@ -50,16 +55,22 @@ export interface IPostSchema extends Document {
     content: string;
     summary: string;
     genre: string;
-    comments: ICommentSchema[];
+    comments: Types.Array<Object>;
     likes: number;
     lodash: string;
+    addComment(comment:any):()=>null;
+}
+PostSchema.methods.addComment = async function(comment:any) {
+    this.comments = this.comments.concat({comment});
+    await this.save();
+
 }
 
 PostSchema.methods.toJSON = function () {
     const post = this;
     const postObject = post.toObject();
 
-    delete postObject.comments;
+    //delete postObject.comments;
     delete postObject.content;
     delete postObject.authorId;
     delete postObject._id;

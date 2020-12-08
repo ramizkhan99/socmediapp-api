@@ -26,4 +26,7 @@ router.patch("/blogsbylodash/:lodash", [auth], postController.modifyBlog);
 // Like a blog post
 router.get("/blogs/like/:lodash", postController.likePost);
 
+//comment on a blog post
+router.post("/blogs/comment/:lodash",[auth],postController.commentPost);
+
 export default router;

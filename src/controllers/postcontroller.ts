@@ -104,4 +104,28 @@ export const postController = {
             next(err);
         }
     },
+    commentPost:async(req:IPostRequest,res:Response,next:NextFunction) => {
+        try{
+            let post = await Post.findOne({
+                lodash: req.params.lodash,
+            });
+            if (!post) throw new NotFoundError("Post not found");
+            const comment = {
+                userid:req.user.username,
+                firstName:req.user.firstName,
+                content:req.body.content
+            }
+            
+            post.addComment(comment);
+            
+            res.status(201).json({
+                success: true,
+                message: "comment added",
+            });
+
+        }catch (err) {
+            next(err);
+        }
+
+    }
 };
