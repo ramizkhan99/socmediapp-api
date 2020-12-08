@@ -6,6 +6,10 @@ import auth from "./middlewares/auth";
 
 const router = Router();
 
+router.get("/", (req, res) => {
+    res.send("This is up");
+});
+
 // User routes
 router.post("/users", userController.create);
 router.post("/login", userController.login);
@@ -27,6 +31,6 @@ router.patch("/blogsbylodash/:lodash", [auth], postController.modifyBlog);
 router.get("/blogs/like/:lodash", postController.likePost);
 
 //comment on a blog post
-router.post("/blogs/comment/:lodash",[auth],postController.commentPost);
+router.post("/blogs/comment/:lodash", [auth], postController.commentPost);
 
 export default router;

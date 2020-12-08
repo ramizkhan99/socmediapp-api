@@ -1,4 +1,5 @@
 import express from "express";
+import session from "express-session";
 import morgan from "morgan";
 import fs from "fs";
 import path from "path";
@@ -16,6 +17,7 @@ const logStream: fs.WriteStream = fs.createWriteStream(
     { flags: "a" }
 );
 
+app.use(session({ secret: "commconn-scecret" }));
 app.use(morgan("combined", { stream: logStream }));
 app.use(morgan("dev"));
 app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
