@@ -1,4 +1,4 @@
-import { Schema, Document, model } from "mongoose";
+import { Schema, Document, model, Types } from "mongoose";
 import { Int32 } from "mongodb";
 import Comment, { ICommentSchema, CommentSchema } from "./comment";
 
@@ -21,7 +21,7 @@ let PostSchema = new Schema(
             type: String,
             required: true,
         },
-        summary:{
+        summary: {
             type: String,
             required: false,
         },
@@ -35,6 +35,7 @@ let PostSchema = new Schema(
         },
         likes: {
             type: Number,
+            default: 0,
         },
     },
     {
@@ -47,10 +48,10 @@ export interface IPostSchema extends Document {
     authorName: string;
     title: string;
     content: string;
-    summary:string;
+    summary: string;
     genre: string;
     comments: ICommentSchema[];
-    likes: Int32;
+    likes: number;
     lodash: string;
 }
 

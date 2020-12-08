@@ -13,10 +13,10 @@ export const postController = {
     create: async (req: IPostRequest, res: Response, next: NextFunction) => {
         try {
             let post = new Post(req.body);
-            let url = "@"+req.user.username+"/"+kebabCase(req.body.title)
+            let url = "@" + req.user.username + "/" + kebabCase(req.body.title);
             post.authorId = req.user._id;
             post.authorName = req.user.username;
-            post.lodash = kebabCase(req.body.title)
+            post.lodash = kebabCase(req.body.title);
             await post.save();
             res.status(201).json({
                 success: true,
@@ -28,23 +28,21 @@ export const postController = {
     },
     getAllBlogs: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if(req.query){
-                const posts = await Post.find(req.query).sort([["createdAt", -1]]);
+            if (req.query) {
+                const posts = await Post.find(req.query).sort([
+                    ["createdAt", -1],
+                ]);
                 if (!posts) throw new NotFoundError("No posts found");
                 let postObjects: Object[] = [];
                 posts.map((post) => postObjects.push(post.toJSON()));
                 res.status(200).json({ success: true, posts: postObjects });
-
-            }
-            else{
+            } else {
                 const posts = await Post.find().sort([["createdAt", -1]]);
                 if (!posts) throw new NotFoundError("No posts found");
                 let postObjects: Object[] = [];
                 posts.map((post) => postObjects.push(post.toJSON()));
                 res.status(200).json({ success: true, posts: postObjects });
-
             }
-
         } catch (err) {
             next(err);
         }
@@ -70,27 +68,40 @@ export const postController = {
         req: IPostRequest,
         res: Response,
         next: NextFunction
-
-    ) =>{
+    ) => {
         try {
-            
             const filter = {
                 lodash: req.params.lodash,
-                authorId:req.user._id
-                }
-            const result = await Post.updateOne(filter,req.body)
-            if(result.n===0)    throw new NotFoundError("Post cannot be modified");
-            console.log(result)
+                authorId: req.user._id,
+            };
+            const result = await Post.updateOne(filter, req.body);
+            if (result.n === 0)
+                throw new NotFoundError("Post cannot be modified");
+            console.log(result);
             res.status(200).json({
                 success: true,
                 message: "Post Modified Successfully",
             });
-
-            
         } catch (err) {
             next(err);
         }
-
-    }
-    
+    },
+    likePost: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const post = await Post.findOneAndUpdate(
+                {
+                    lodash: req.params.lodash,
+                },
+                {
+                    $inc: {
+                        likes: 1,
+                    },
+                }
+            );
+            if (!post) throw new NotFoundError("Post not found");
+            res.status(204).json();
+        } catch (err) {
+            next(err);
+        }
+    },
 };

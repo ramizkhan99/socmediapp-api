@@ -18,10 +18,12 @@ router.get("/signout", [auth], userController.signout);
 router
     .route("/blogs")
     .post([auth], postController.create)
-    .get([auth],postController.getAllBlogs);
+    .get([auth], postController.getAllBlogs);
 
 router.get("/blogsbylodash/:lodash", postController.getBlogByLodash);
-router.patch("/blogsbylodash/:lodash",[auth],postController.modifyBlog);
+router.patch("/blogsbylodash/:lodash", [auth], postController.modifyBlog);
 
+// Like a blog post
+router.get("/blogs/like/:lodash", postController.likePost);
 
 export default router;
