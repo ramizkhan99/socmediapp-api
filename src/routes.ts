@@ -33,7 +33,8 @@ router.get("/foo", (req: Request, res: Response) => {
 router
     .route("/users")
     .post(userController.create)
-    .patch(userController.updateUser);
+    .delete([auth], userController.deleteUser)
+    .patch([auth], userController.updateUser);
 router
     .route("/users/me/avatar")
     .post([auth], upload.single("avatar"), userController.addAvatar)

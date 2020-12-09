@@ -117,4 +117,20 @@ export const userController = {
             next(e);
         }
     },
+
+    deleteUser: async (
+        req: IUserRequest,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            await req.user.deleteOne();
+            res.status(200).json({
+                success: true,
+                message: "User deleted successfully",
+            });
+        } catch (e) {
+            next(e);
+        }
+    },
 };

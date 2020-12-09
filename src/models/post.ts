@@ -1,6 +1,4 @@
 import { Schema, Document, model, Types } from "mongoose";
-import { Int32 } from "mongodb";
-import Comment, { ICommentSchema, CommentSchema } from "./comment";
 
 let PostSchema = new Schema(
     {
@@ -30,13 +28,14 @@ let PostSchema = new Schema(
             required: false,
             default: "General",
         },
-        comments: [{
-            comment:{
-                userid:String,
-                firstName:String,
-                content:String
+        comments: [
+            {
+                comment: {
+                    userid: String,
+                    firstName: String,
+                    content: String,
+                },
             },
-        }
         ],
         likes: {
             type: Number,
@@ -58,13 +57,12 @@ export interface IPostSchema extends Document {
     comments: Types.Array<Object>;
     likes: number;
     lodash: string;
-    addComment(comment:any):()=>null;
+    addComment(comment: any): () => null;
 }
-PostSchema.methods.addComment = async function(comment:any) {
-    this.comments = this.comments.concat({comment});
+PostSchema.methods.addComment = async function (comment: any) {
+    this.comments = this.comments.concat({ comment });
     await this.save();
-
-}
+};
 
 PostSchema.methods.toJSON = function () {
     const post = this;
