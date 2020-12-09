@@ -2,6 +2,7 @@ import User, { IUserSchema } from "../models/user";
 import { NextFunction, Request, Response } from "express";
 import HttpError from "../errors/HttpError";
 import NotFoundError from "../errors/NotFound";
+import sharp from "sharp";
 
 interface IUserRequest extends Request {
     user: IUserSchema;
@@ -43,6 +44,7 @@ export const userController = {
             next(e);
         }
     },
+
     signout: async (req: IUserRequest, res: Response, next: NextFunction) => {
         try {
             req.user.deleteToken(req.token);
@@ -57,6 +59,60 @@ export const userController = {
 
     addAvatar: async (req: IUserRequest, res: Response, next: NextFunction) => {
         try {
+            const buffer = await sharp(req.file.buffer)
+                .resize({
+                    width: 250,
+                    height: 250,
+                })
+                .png()
+                .toBuffer();
+
+            req.user.avatar = buffer;
+            await req.user.save();
+            res.status(200).send();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    removeAvatar: async (
+        req: IUserRequest,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            req.user.avatar = null;
+            await req.user.save();
+            res.status(204).send();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    updateUser: async (
+        req: IUserRequest,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const updates = Object.keys(req.body);
+            const allowedUpdates = [
+                "firstName",
+                "lastName",
+                "password",
+                "username",
+            ];
+            const isValidUpdate = updates.every((update) =>
+                allowedUpdates.includes(update)
+            );
+
+            if (!isValidUpdate) throw new HttpError(400, "Invalid updates");
+
+            updates.forEach(
+                (update) => ((req.user as any)[update] = req.body[update])
+            );
+            await req.user.save();
+            res.json(req.user);
         } catch (e) {
             next(e);
         }

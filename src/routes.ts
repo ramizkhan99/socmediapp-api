@@ -1,8 +1,20 @@
 import { Router, Request, Response } from "express";
 import { postController } from "./controllers/postcontroller";
-
 import { userController } from "./controllers/userController";
 import auth from "./middlewares/auth";
+import multer from "multer";
+
+const upload = multer({
+    limits: {
+        fileSize: 1000000,
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error("Invalid format for avatar"));
+        }
+        cb(undefined, true);
+    },
+});
 
 const router = Router();
 
@@ -18,7 +30,14 @@ router.get("/foo", (req: Request, res: Response) => {
 });
 
 // User routes
-router.post("/users", userController.create);
+router
+    .route("/users")
+    .post(userController.create)
+    .patch(userController.updateUser);
+router
+    .route("/users/me/avatar")
+    .post([auth], upload.single("avatar"), userController.addAvatar)
+    .delete([auth], userController.removeAvatar);
 router.post("/login", userController.login);
 router.get("/test", [auth], (req: Request, res: Response) => {
     res.status(200).send("okay");

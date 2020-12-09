@@ -14,22 +14,22 @@ let UserSchema = new Schema(
             unique: true,
             required: true,
             match: [/^[a-zA-Z0-9]+$/, "is invalid"],
-            index: true
+            index: true,
         },
         email: {
             type: String,
             unique: true,
             required: true,
             match: [/\S+@\S+\.\S+/, "is invalid"],
-            index: true
+            index: true,
         },
         password: {
             type: String,
-            required: true
+            required: true,
         },
         firstName: {
             type: String,
-            required: true
+            required: true,
         },
         lastName: String,
         avatar: Buffer,
@@ -37,20 +37,20 @@ let UserSchema = new Schema(
         location: String,
         active: {
             type: Boolean,
-            default: false
+            default: false,
         },
         posts: [{ type: ObjectID }],
         likedPost: [{ type: ObjectID }],
         tokens: [
             {
                 token: {
-                    type: String
-                }
-            }
-        ]
+                    type: String,
+                },
+            },
+        ],
     },
     {
-        timestamps: true
+        timestamps: true,
     }
 );
 
@@ -59,7 +59,7 @@ export interface IUserSchema extends Document {
     lastName?: string;
     username: string;
     password: string;
-    avatar?: Types.Buffer;
+    avatar?: Buffer;
     salt: string;
     location?: string;
     active: boolean;
@@ -91,7 +91,7 @@ UserSchema.methods.validPassword = async function (password: BinaryLike) {
 
 UserSchema.methods.generateAuthToken = async function () {
     const accessToken = jwt.sign({ username: this.username }, secret, {
-        expiresIn: "60m"
+        expiresIn: "60m",
     });
 
     this.tokens = this.tokens.concat({ token: accessToken });
@@ -113,7 +113,7 @@ function hashPassword(password: BinaryLike) {
         password: crypto
             .pbkdf2Sync(password, salt, 8, 128, "sha512")
             .toString("hex"),
-        salt
+        salt,
     };
 }
 
