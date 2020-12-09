@@ -14,7 +14,7 @@ declare module "express-session" {
 
 router.get("/", (req: Request, res: Response) => {
     let sess = req.session;
-    console.log(!!sess.value);
+    console.log(sess);
     if (!!sess.value) {
         sess.value++;
         res.send("You were here " + sess.value + " times");
@@ -22,6 +22,7 @@ router.get("/", (req: Request, res: Response) => {
         sess.value = 1;
         res.send("You are here for the first time");
     }
+    console.log(sess.value);
 });
 
 // User routes

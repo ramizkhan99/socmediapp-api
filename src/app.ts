@@ -29,16 +29,21 @@ app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
 app.use(cookieParser());
 app.use(
     session({
-        secret: "commconn-secret",
         name: "commconn",
+        secret: "commconn-secret",
         cookie: {
             httpOnly: true,
             secure: true,
             maxAge: 600000,
             sameSite: false,
         },
-        store: new RedisStore({ client: redisClient, ttl: 86400 }),
-        saveUninitialized: false,
+        store: new RedisStore({
+            host: "localhost",
+            port: 6379,
+            client: redisClient,
+            ttl: 86400,
+        }),
+        saveUninitialized: true,
         resave: false,
     })
 );
@@ -50,5 +55,9 @@ app.use(errorHandler);
 const sessionid = () => {
     return "thisisit";
 };
+
+redisClient.on("error", (err) => {
+    console.log("Redis error: ", err);
+});
 
 // sWR6TzReNOcotVEDA2YYLnmrT51jcgl5nxtcfii+PxAHjAC+iN7YicrLlcaygmxNPKh2G9UitkugEYsP
