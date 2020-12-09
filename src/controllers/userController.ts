@@ -54,4 +54,11 @@ export const userController = {
             next(e);
         }
     },
+
+    addAvatar: async (req: IUserRequest, res: Response, next: NextFunction) => {
+        try {
+        } catch (e) {
+            next(e);
+        }
+    },
 };

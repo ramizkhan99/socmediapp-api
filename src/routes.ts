@@ -12,17 +12,9 @@ declare module "express-session" {
     }
 }
 
-router.get("/", (req: Request, res: Response) => {
-    let sess = req.session;
-    console.log(sess);
-    if (!!sess.value) {
-        sess.value++;
-        res.send("You were here " + sess.value + " times");
-    } else {
-        sess.value = 1;
-        res.send("You are here for the first time");
-    }
-    console.log(sess.value);
+router.get("/foo", (req: Request, res: Response) => {
+    req.session.value = (req.session.value || 0) + 1;
+    res.send("You viewed this page " + req.session.value + " times");
 });
 
 // User routes

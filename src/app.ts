@@ -23,13 +23,21 @@ const logStream: fs.WriteStream = fs.createWriteStream(
     { flags: "a" }
 );
 
+redisClient.on("connect", () => {
+    console.log("Redis connected");
+});
+
+redisClient.on("error", (err) => {
+    console.log("Redis error: ", err);
+});
+
 app.use(morgan("combined", { stream: logStream }));
 app.use(morgan("dev"));
 app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
 app.use(cookieParser());
 app.use(
     session({
-        name: "commconn",
+        name: "_commconn",
         secret: "commconn-secret",
         cookie: {
             httpOnly: true,
@@ -51,13 +59,8 @@ app.use(express.json());
 app.use(router);
 app.use(errorHandler);
 
-// For commit to test neko-chan telewire test 1
 const sessionid = () => {
     return "thisisit";
 };
-
-redisClient.on("error", (err) => {
-    console.log("Redis error: ", err);
-});
 
 // sWR6TzReNOcotVEDA2YYLnmrT51jcgl5nxtcfii+PxAHjAC+iN7YicrLlcaygmxNPKh2G9UitkugEYsP
