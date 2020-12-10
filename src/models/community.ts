@@ -15,10 +15,12 @@ let CommunitySchema = new Schema({
     members: {
         type: User,
     },
-    admins: {
-        type: User,
-        required: true,
-    },
+    admins: [
+        {
+            type: User,
+            required: true,
+        },
+    ],
     popularity: {
         type: Number,
         default: 0,
@@ -29,9 +31,9 @@ let CommunitySchema = new Schema({
 export interface ICommunitySchema extends Document {
     name: string;
     lodash: string;
-    posts?: IPostSchema;
-    members?: IUserSchema;
-    admins: IUserSchema;
+    posts?: Types.Array<IPostSchema>;
+    members?: Types.Array<IUserSchema>;
+    admins: Types.Array<IUserSchema>;
     popularity: number;
     addMember(user: IUserSchema): () => null;
     addPost(post: IPostSchema): () => null;
